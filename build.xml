@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ESA_BUI" default="run" basedir=".">
+    
+    <!-- Definiere die Basisverzeichnisse -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="lib.dir" value="libs"/>
+    <property name="jar.name" value="ESA_BUI.jar"/>
+    
+    <!-- Clean-Target zum Löschen der Build-Dateien -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <echo message="Clean completed"/>
+    </target>
+
+    <!-- Download von externen Bibliotheken -->
+    <target name="get-libs">
+        <get src="https://example.com/library.jar" dest="libs/library.jar"/>
+    </target>
+
+    <!-- Compilation der Java-Dateien -->
+    <target name="compile" depends="clean">
+        <mkdir dir="${build.dir}/classes"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}/classes" includeantruntime="false"/>
+        <echo message="Compilation completed"/>
+    </target>
+
+    <!-- Erstellen des JAR-Archivs -->
+    <target name="jar" depends="compile">
+        <mkdir dir="${build.dir}/libs"/>
+        <jar destfile="${build.dir}/libs/${jar.name}" basedir="${build.dir}/classes"/>
+        <echo message="JAR creation completed"/>
+    </target>
+
+    <!-- Ausführen der Anwendung -->
+    <target name="run" depends="compile">
+        <java classname="ESA_BUI.Main" classpath="${build.dir}/classes"/>
+        <echo message="Program executed"/>
+    </target>
+
+    <!-- Testen der Anwendung -->
+    <target name="test" depends="compile">
+        <junit>
+            <classpath>
+                <pathelement path="${build.dir}/classes"/>
+            </classpath>
+            <test name="ESA_BUI.TestMain"/>
+        </junit>
+    </target>
+
+    <!-- Erstellen der Javadoc-Dokumentation -->
+    <target name="doc">
+        <mkdir dir="${build.dir}/docs"/>
+        <javadoc destdir="${build.dir}/docs" sourcepath="${src.dir}" packagenames="ESA_BUI"/>
+        <echo message="Javadoc created"/>
+    </target>
+
+    <!-- Standard-Target -->
+    <target name="default" depends="clean, compile, jar, run">
+        <echo message="Build completed successfully"/>
+    </target>
+
+</project>
